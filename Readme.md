@@ -46,25 +46,24 @@ The tool is intentionally minimal and focuses on **clarity, safety, and correctn
 ## 4. Project Structure
 
 ```
-project-backup-cli/
+backtrack/
 │
 ├── backup.py              # CLI entry point
 │
-├── backup/                # Core logic
+├── backup_module/         # Core backup logic
 │   ├── __init__.py
 │   ├── config.py          # Configuration handling
 │   ├── initializer.py     # init command logic
 │   ├── backup_manager.py  # save / auto backup logic
 │   ├── restore_manager.py # restore logic
-│   ├── retention.py       # backup retention policy
-│   └── utils.py           # shared utilities
+│   ├── retention.py       # Backup retention policy
+│   └── utils.py           # Shared utilities
 │
 ├── .backups/              # Created after initialization
 │   └── config.json
 │
-├── screenshots/           # Sample outputs
-├── sample_output.txt
-└── README.md
+└── backup-cli.bat         # Windows CLI wrapper
+
 ```
 
 ---
@@ -194,7 +193,6 @@ screenshots/
 ├── save.png
 ├── list.png
 ├── restore.png
-└── git-integration.png
 ```
 
 ---
