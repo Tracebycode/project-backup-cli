@@ -1,6 +1,6 @@
 # 📦 Project Backup CLI
 
-A lightweight system-level command-line utility to create and manage local backups of a project during development.
+A lightweight, system-level command-line utility for creating and managing local backups of a project during development.
 
 ---
 
@@ -10,35 +10,35 @@ While working on development projects (especially in VS Code), I often experimen
 
 As a result:
 
-* I forget to save working versions
-* Reverting changes becomes difficult
-* I lose time fixing avoidable mistakes
+* Working versions are lost
+* Rolling back changes becomes difficult
+* Time is wasted fixing avoidable mistakes
 
-There is a need for a **simple, local, and fast backup mechanism** that works directly at the file-system level without requiring external tools or frameworks.
+There is a need for a **simple, fast, and local backup mechanism** that works directly at the file-system level without relying on external tools or frameworks.
 
 ---
 
 ## 2. Solution Overview
 
-This project provides a **command-line backup utility** that allows developers to:
+This project implements a **command-line backup utility** that enables developers to:
 
-* Initialize a project for backups (similar to `git init`)
+* Explicitly initialize a project for backups (Git-style lifecycle)
 * Create timestamped ZIP snapshots of the project
 * Automatically retain only the most recent backups
 * Restore the project to a previous working state
-* Integrate easily with VS Code run workflows
+* Integrate seamlessly with editor workflows such as VS Code
 
-The tool is intentionally kept minimal, uses only standard libraries, and focuses on **clarity, safety, and correctness**.
+The tool is intentionally minimal and focuses on **clarity, safety, and correctness**, using only standard libraries.
 
 ---
 
 ## 3. Key Features
 
-* 📁 Project-level backups stored locally
+* 📁 Local, project-scoped backups
 * ⏱ Timestamped ZIP snapshots
-* ♻ Automatic retention of last *N* backups (default: 4)
-* 🔄 Safe restore with user confirmation
-* 🧰 Simple CLI commands
+* ♻ Automatic retention of the last *N* backups (default: 4)
+* 🔄 Safe restore with explicit user confirmation
+* 🧰 Simple and predictable CLI commands
 * ⚙ No external dependencies or frameworks
 
 ---
@@ -53,10 +53,10 @@ project-backup-cli/
 ├── backup/                # Core logic
 │   ├── __init__.py
 │   ├── config.py          # Configuration handling
-│   ├── initializer.py     # init command
-│   ├── backup_manager.py  # save / auto backups
+│   ├── initializer.py     # init command logic
+│   ├── backup_manager.py  # save / auto backup logic
 │   ├── restore_manager.py # restore logic
-│   ├── retention.py       # cleanup old backups
+│   ├── retention.py       # backup retention policy
 │   └── utils.py           # shared utilities
 │
 ├── .backups/              # Created after initialization
@@ -69,162 +69,209 @@ project-backup-cli/
 
 ---
 
-## 5. Commands & Usage
+## 5. How to Run the Program
 
-### 1️⃣ Initialize Project (Required)
+### Usage Model (Important)
 
-Initializes the project for backups.
+* The tool operates on the **current working directory**
+* The directory where the command is executed is treated as the **project root**
+* The backup utility itself can be located anywhere on the system
+
+---
+
+### Option 1: Run Using PATH (Recommended)
+
+For convenience, the backup tool directory can be added to the system `PATH`.
+This allows the command to be executed from any project directory.
+
+**Steps (Windows):**
+
+1. Add the tool directory to the `Path` environment variable:
+
+   ```
+   C:\Users\ASUS\Desktop\project-backup-cli
+   ```
+2. Restart the terminal.
+3. Navigate to the project you want to back up:
+
+   ```bash
+   cd path/to/your/project
+   ```
+4. Run commands:
+
+   ```bash
+   backup-cli init
+   backup-cli save
+   backup-cli list
+   backup-cli restore
+   ```
+
+---
+
+### Option 2: Run Using Full Path (No PATH Setup)
+
+If the tool directory is not added to `PATH`, it can be executed using its full path.
 
 ```bash
-python backup.py init
+cd path/to/your/project
+python C:\Users\ASUS\Desktop\project-backup-cli\backup.py init
 ```
 
-This creates a `.backups/` directory and a configuration file.
+The current working directory is treated as the project root.
+
+---
+
+## 6. Commands & Usage
+
+### Initialize Project (Required)
+
+```bash
+backup-cli init
+```
+
+Initializes the project by creating a `.backups/` directory and configuration file.
 All other commands require this step.
 
 ---
 
-### 2️⃣ Create a Manual Backup
+### Create a Manual Backup
 
 ```bash
-python backup.py save
+backup-cli save
 ```
 
-Creates a timestamped ZIP backup of the project.
+Creates a timestamped ZIP snapshot of the current project state.
 
 ---
 
-### 3️⃣ Automatic Backup (VS Code Integration)
+### Automatic Backup (Editor Integration)
 
 ```bash
-python backup.py auto
+backup-cli auto
 ```
 
-Designed to be used as a **pre-run task** in VS Code to automatically back up the project before execution.
+Creates a backup without user prompts.
+Designed to be used as a **pre-run task** in editors like VS Code.
 
 ---
 
-### 4️⃣ List Available Backups
+### List Available Backups
 
 ```bash
-python backup.py list
+backup-cli list
 ```
 
-Displays all available backups in reverse chronological order.
+Displays available backups in reverse chronological order.
 
 ---
 
-### 5️⃣ Restore a Backup
+### Restore a Backup
 
 ```bash
-python backup.py restore
+backup-cli restore
 ```
 
-Allows the user to select and restore a previous backup with overwrite confirmation.
-
----
-### Usage
-
-```md
-The tool is executed from the project directory that needs to be backed up.
-The backup utility itself can be located anywhere on the system.
-```
-
-### Safety
-
-```md
-The `.git` directory is excluded from backups and restore operations to avoid
-permission issues and prevent corruption of Git internals.
-
-After restoring files, open editors may need to be refreshed to reflect
-filesystem changes.
-```
-
-### Auto Backup
-
-```md
-`auto` creates a backup without prompts and is intended for editor pre-run hooks.
-```
+Allows the user to select and restore a previous snapshot with overwrite confirmation.
 
 ---
 
-## 6. Design Decisions
+
+## 📸 Sample Output (Screenshots)
+
+The `screenshots/` directory contains sample outputs demonstrating the tool in action, including:
+
+* Project initialization (`init`)
+* Backup creation (`save`)
+* Listing available backups (`list`)
+* Restore flow with confirmation (`restore`)
+* Interaction with Git-initialized projects
+
+These screenshots provide visual confirmation of correct behavior and expected CLI output.
+
+```
+screenshots/
+├── init.png
+├── save.png
+├── list.png
+├── restore.png
+└── git-integration.png
+```
+
+---
+---
+
+## 7. Safety & Design Considerations
+
+* The `.git` directory is explicitly excluded from backup and restore operations to avoid permission issues and prevent corruption of Git internals
+* The `.backups/` directory is excluded from Git using `.gitignore`
+* Restore operations require explicit user confirmation
+* Open editors may need to be refreshed after restoring files to reflect filesystem changes
+
+---
+
+## 8. Design Decisions
 
 ### Why a CLI Tool?
 
 * Fast execution
 * Easy automation
-* Fits naturally into developer workflows
+* Natural fit for developer workflows
 
----
-
-### Why `init` Command (Git-style)?
+### Why a Git-style `init` Lifecycle?
 
 * Makes project state explicit
-* Prevents accidental backups
-* Follows proven system-tool design patterns
+* Prevents accidental operations
+* Follows proven system-tool patterns
 
----
+### Why ZIP-based Snapshots?
 
-### Why Store Backups Inside the Project?
-
-* Keeps backups isolated per project
-* Simplifies restore logic
-* Avoids global state and permission issues
-
----
-
-### Why ZIP-based Backups?
-
-* Single-file snapshot
-* Easy to store, move, and restore
+* Single-file backups
+* Easy to store and restore
 * Fully supported by standard libraries
-
----
 
 ### Why Only Standard Libraries?
 
 * Ensures portability
-* Avoids dependency complexity
+* Avoids dependency overhead
 * Aligns with internship requirements
 
 ---
 
-## 7. Error Handling & Safety
+## 9. Error Handling
 
-* `.backups/` directory is excluded from backups to prevent recursion
-* Restore operation requires user confirmation
-* Permission and file-system errors are handled gracefully
-* Invalid commands provide clear usage guidance
+* Clear messages for uninitialized projects
+* Graceful handling of filesystem and permission errors
+* Safe handling of invalid user inputs
+* No destructive operations without confirmation
 
 ---
 
-## 8. Limitations
+## 10. Limitations
 
-* This tool does **not** replace Git or full version control systems
-* Designed for small to medium-sized projects
+* This tool does **not** replace Git or version control systems
+* Intended for small to medium-sized projects
 * No remote or cloud backup support
 
 ---
 
-## 9. Future Improvements
+## 11. Future Improvements
 
-* Configurable backup limit via CLI flags
-* Selective file/folder exclusion
+* Configurable backup limits
+* Custom exclusion rules
 * Incremental backups
-* Cross-project global management
+* Cross-project backup management
 
 ---
 
-## 10. Conclusion
+## 12. Conclusion
 
-Although my previous experience includes full-stack projects, this utility was intentionally designed as a **small system-level tool** to demonstrate core software engineering fundamentals such as:
+Although my prior experience includes full-stack development, this project was intentionally designed as a **small system-level utility** to demonstrate core software engineering fundamentals:
 
 * Clear problem understanding
-* Modular architecture
+* Clean and modular design
 * File-system safety
 * Explicit lifecycle management
-* Clean and readable code
+* Practical error handling
 
 ---
 
