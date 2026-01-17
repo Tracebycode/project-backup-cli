@@ -1,5 +1,5 @@
-from backup.utils import get_project_root, get_backup_dir
-from backup.config import create_default_config
+from backup_module.utils import get_project_root, get_backup_dir
+from backup_module.config import create_default_config
 
 def init_project():
     project_root = get_project_root()

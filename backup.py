@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 import sys
-from backup.backup_manager import list_backups, save_backup, auto_backup
-from backup.initializer import init_project
-from backup.restore_manager import restore_backup
+from backup_module.backup_manager import list_backups, save_backup, auto_backup
+from backup_module.initializer import init_project
+from backup_module.restore_manager import restore_backup
 
 
 # Entry point for the backup package

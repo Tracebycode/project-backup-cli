@@ -1,5 +1,5 @@
 import zipfile
-from backup.utils import get_project_root, get_backup_dir
+from backup_module.utils import get_project_root, get_backup_dir
 
 def restore_backup():
     project_root = get_project_root()

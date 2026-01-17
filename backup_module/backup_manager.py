@@ -1,14 +1,15 @@
 from pathlib import Path
-from backup.utils import (
+from backup_module.utils import (
     get_project_root,
     get_backup_dir,
     get_timestamp,
     get_project_name,
 )
-from backup.retention import cleanup_old_backups
+from backup_module.retention import cleanup_old_backups
 import zipfile
 
 
+# List available backups
 def list_backups():
     project_root = get_project_root()
     backup_dir = get_backup_dir(project_root)
@@ -33,7 +34,7 @@ def list_backups():
         print(f"{idx}. {backup.name}")
 
 
-
+#`# Save a new backup`
 def save_backup():
     project_root = get_project_root()
     backup_dir = get_backup_dir(project_root)
@@ -63,5 +64,9 @@ def save_backup():
     print(f"Backup created successfully: {zip_name}")
     
     
+    
+    
+
+# Automatic backup function
 def auto_backup():
     save_backup()
